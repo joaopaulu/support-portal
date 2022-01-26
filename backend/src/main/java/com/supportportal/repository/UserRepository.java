@@ -1,6 +1,6 @@
 package com.supportportal.repository;
 
-import com.supportportal.entities.User;
+import com.supportportal.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserRepository extends JpaRepository<User, Long> {

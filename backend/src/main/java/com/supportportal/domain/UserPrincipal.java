@@ -1,4 +1,4 @@
-package com.supportportal.entities;
+package com.supportportal.domain;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

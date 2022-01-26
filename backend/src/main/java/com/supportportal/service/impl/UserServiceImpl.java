@@ -1,7 +1,7 @@
 package com.supportportal.service.impl;
 
-import com.supportportal.entities.User;
-import com.supportportal.entities.UserPrincipal;
+import com.supportportal.domain.User;
+import com.supportportal.domain.UserPrincipal;
 import com.supportportal.repository.UserRepository;
 import com.supportportal.service.UserService;
 import org.slf4j.Logger;
