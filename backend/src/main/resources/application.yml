@@ -1,2 +1,9 @@
 jwt:
   secret: 'sdfasdf65478934'
+
+spring:
+  mvc:
+    throw-exception-if-no-handler-found: true
+  web:
+    resources:
+      add-mappings: false
