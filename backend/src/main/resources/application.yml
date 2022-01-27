@@ -2,8 +2,19 @@ jwt:
   secret: 'sdfasdf65478934'
 
 spring:
-  mvc:
-    throw-exception-if-no-handler-found: true
-  web:
-    resources:
-      add-mappings: false
+  datasource:
+    url: jdbc:mysql://localhost:3306/supportportal
+    username: root
+    password: root
+  jpa:
+    show-sql: true
+    hibernate:
+      dll-auto: update
+    properties:
+      hibernate:
+        dialect:org.hibernate.dialect.MySQL8Dialect
+#  mvc:
+#    throw-exception-if-no-handler-found: true
+#  web:
+#    resources:
+#      add-mappings: false
