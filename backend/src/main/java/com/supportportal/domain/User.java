@@ -10,7 +10,7 @@ import java.util.Date;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String userId;
     private String firstName;
@@ -23,13 +23,13 @@ public class User {
     private Date lastLoginDateDisplay;
     private Date joinDate;
     private String role;
-    private String authorities;
+    private String[] authorities;
     private boolean isActive;
     private boolean isNotLocked;
 
     public User(){}
 
-    public User(Long id, String userId, String firstName, String lastName, String username, String password, String email, String profileImageUrl, Date lastLoginDate, Date lastLoginDateDisplay, Date joinDate, String role, String authorities, boolean isActive, boolean isNotLocked) {
+    public User(Long id, String userId, String firstName, String lastName, String username, String password, String email, String profileImageUrl, Date lastLoginDate, Date lastLoginDateDisplay, Date joinDate, String role, String[] authorities, boolean isActive, boolean isNotLocked) {
         this.id = id;
         this.userId = userId;
         this.firstName = firstName;
@@ -139,15 +139,15 @@ public class User {
         return role;
     }
 
-    public void setRole(String roles) {
-        this.role = roles;
+    public void setRole(String role) {
+        this.role = role;
     }
 
-    public String getAuthorities() {
+    public String[] getAuthorities() {
         return authorities;
     }
 
-    public void setAuthorities(String authorities) {
+    public void setAuthorities(String[] authorities) {
         this.authorities = authorities;
     }
 
