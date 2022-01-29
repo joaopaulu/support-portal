@@ -1,4 +1,4 @@
-package com.supportportal.utils;
+package com.supportportal.utility;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;

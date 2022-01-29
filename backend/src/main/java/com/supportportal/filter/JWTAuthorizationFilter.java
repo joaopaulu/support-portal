@@ -1,12 +1,8 @@
 package com.supportportal.filter;
 
-import com.supportportal.constant.SecurityConstant;
-import com.supportportal.utils.JWTTokenProvider;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
+import com.supportportal.utility.JWTTokenProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -18,7 +14,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
+import static com.supportportal.constant.SecurityConstant.OPTIONS_HTTP_METHOD;
 import static com.supportportal.constant.SecurityConstant.TOKEN_PREFIX;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+import static org.springframework.http.HttpStatus.OK;
 
 @Component
 public class JWTAuthorizationFilter extends OncePerRequestFilter {
@@ -29,10 +28,10 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
     }
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        if(request.getMethod().equalsIgnoreCase(SecurityConstant.OPTIONS_HTTP_METHOD)){
-            response.setStatus(HttpStatus.OK.value());
+        if(request.getMethod().equalsIgnoreCase(OPTIONS_HTTP_METHOD)){
+            response.setStatus(OK.value());
         }else{
-            String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+            String authorizationHeader = request.getHeader(AUTHORIZATION);
             if(authorizationHeader == null || !authorizationHeader.startsWith(TOKEN_PREFIX)){
                 filterChain.doFilter(request, response);
                 return;

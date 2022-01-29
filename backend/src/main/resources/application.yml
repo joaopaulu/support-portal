@@ -9,7 +9,7 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      dll-auto: create
+      dll-auto: update
     properties:
       hibernate:
         dialect:org.hibernate.dialect.MySQL8Dialect
@@ -18,3 +18,4 @@ spring:
 #  web:
 #    resources:
 #      add-mappings: false
+#nBZGJLclzO
