@@ -9,11 +9,11 @@ import org.springframework.stereotype.Component;
 import java.util.concurrent.ExecutionException;
 
 @Component
-public class AuthenticationFilureListener {
+public class AuthenticationFailureListener {
     private LoginAttemptService loginAttemptService;
 
     @Autowired
-    public AuthenticationFilureListener(LoginAttemptService loginAttemptService){
+    public AuthenticationFailureListener(LoginAttemptService loginAttemptService){
         this.loginAttemptService = loginAttemptService;
     }
 
