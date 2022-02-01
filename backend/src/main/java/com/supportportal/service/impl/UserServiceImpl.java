@@ -6,6 +6,7 @@ import com.supportportal.exception.domain.EmailExistException;
 import com.supportportal.exception.domain.UserNotFoundException;
 import com.supportportal.exception.domain.UsernameExistException;
 import com.supportportal.repository.UserRepository;
+import com.supportportal.service.LoginAttemptService;
 import com.supportportal.service.UserService;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -37,11 +38,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private Logger LOGGER = LoggerFactory.getLogger(getClass());
     private UserRepository userRepository;
     private BCryptPasswordEncoder passwordEncoder;
+    private LoginAttemptService loginAttemptService;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder, LoginAttemptService loginAttemptService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.loginAttemptService = loginAttemptService;
     }
 
     @Override
@@ -51,6 +54,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             LOGGER.error(NO_USER_FOUND_BY_USERNAME + username);
             throw new UsernameNotFoundException(NO_USER_FOUND_BY_USERNAME + username);
         } else {
+            validateLoginAttempt(user);
             user.setLastLoginDateDisplay(user.getLastLoginDate());
             user.setLastLoginDate(new Date());
             userRepository.save(user);
@@ -58,6 +62,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             LOGGER.info(FOUND_USER_BY_USERNAME + username);
             return userPrincipal;
         }
+    }
+
+    private void validateLoginAttempt(User user){
+
     }
 
     @Override
