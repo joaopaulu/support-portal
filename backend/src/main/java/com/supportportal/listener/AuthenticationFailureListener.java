@@ -6,8 +6,6 @@ import org.springframework.context.event.EventListener;
 import org.springframework.security.authentication.event.AuthenticationFailureBadCredentialsEvent;
 import org.springframework.stereotype.Component;
 
-import java.util.concurrent.ExecutionException;
-
 @Component
 public class AuthenticationFailureListener {
     private LoginAttemptService loginAttemptService;
