@@ -1,6 +1,7 @@
 package com.supportportal.listener;
 
 import com.supportportal.domain.User;
+import com.supportportal.domain.UserPrincipal;
 import com.supportportal.service.LoginAttemptService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
@@ -19,8 +20,8 @@ public class AuthenticationSuccessListener {
     @EventListener
     public void onAuthenticationSuccess(AuthenticationSuccessEvent event){
         Object principal = event.getAuthentication().getPrincipal();
-        if(principal instanceof User){
-            User user = (User) event.getAuthentication().getPrincipal();
+        if(principal instanceof UserPrincipal){
+            UserPrincipal user = (UserPrincipal) event.getAuthentication().getPrincipal();
             loginAttemptService.evictUserFromLoginAttemptCache(user.getUsername());
         }
     }
