@@ -2,7 +2,9 @@ package com.supportportal.service.impl;
 
 import com.supportportal.domain.User;
 import com.supportportal.domain.UserPrincipal;
+import com.supportportal.enumeration.Role;
 import com.supportportal.exception.domain.EmailExistException;
+import com.supportportal.exception.domain.EmailNotFoundException;
 import com.supportportal.exception.domain.UserNotFoundException;
 import com.supportportal.exception.domain.UsernameExistException;
 import com.supportportal.repository.UserRepository;
@@ -21,6 +23,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.mail.MessagingException;
@@ -104,8 +107,77 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return user;
     }
 
-    private String getTemporaryProfileImageUrl() {
-        return ServletUriComponentsBuilder.fromCurrentContextPath().path(DEFAULT_USER_IMAGE_PATH).toUriString();
+    @Override
+    public User addNewUser(String firstName, String lastName, String username, String email, String role, boolean isNonLocked, boolean isActive, MultipartFile profileImage) throws UserNotFoundException, EmailExistException, UsernameExistException {
+        validateNewUsernameAndEmail(EMPTY, username, email);
+        User user = new User();
+        String password = generatePassword();
+        user.setUserId(generateUserId());
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setJoinDate(new Date());
+        user.setUsername(username);
+        user.setEmail(email);
+        user.setPassword(encodePassword(password));
+        user.setActive(isActive);
+        user.setNotLocked(isNonLocked);
+        user.setRole(getRoleEnumName(role).name());
+        user.setAuthorities(getRoleEnumName(role).getAuthorities());
+        user.setProfileImageUrl(getTemporaryProfileImageUrl(username));
+        userRepository.save(user);
+        saveProfileImage(user, profileImage);
+        return user;
+    }
+
+    @Override
+    public User updateUser(String currentUsername, String newFirstName, String newLastName, String newUsername, String newEmail, String role, boolean isNonLocked, boolean isActive, MultipartFile profileImage) throws UserNotFoundException, EmailExistException, UsernameExistException {
+        User currenuser = validateNewUsernameAndEmail(currentUsername, newUsername, newEmail);
+        User user = new User();
+        String password = generatePassword();
+        currenuser.setFirstName(newFirstName);
+        currenuser.setLastName(newLastName);
+        currenuser.setUsername(newUsername);
+        currenuser.setEmail(newEmail);
+        currenuser.setActive(isActive);
+        currenuser.setNotLocked(isNonLocked);
+        currenuser.setRole(getRoleEnumName(role).name());
+        userRepository.save(currenuser);
+        saveProfileImage(currenuser, profileImage);
+        return currenuser;
+    }
+
+    @Override
+    public void deleteUser(long id) {
+        userRepository.deleteById(id);
+    }
+
+    @Override
+    public void resetPassword(String email) throws MessagingException, EmailNotFoundException {
+        User user = userRepository.findUserByEmail(email);
+        if(user == null){
+            throw new EmailNotFoundException(NO_USER_FOUND_BY_EMAIL + email);
+        }
+        String password = generatePassword();
+        user.setPassword(encodePassword(password));
+        userRepository.save(user);
+        emailService.sendNewPasswordEmail(user.getFirstName(), password, user.getEmail());
+    }
+
+    @Override
+    public User updateProfileImage(String username, MultipartFile profileImage) throws UserNotFoundException, EmailExistException, UsernameExistException {
+        User user = validateNewUsernameAndEmail(username,null, null);
+        saveProfileImage(user, profileImage);
+        return user;
+    }
+
+    private void saveProfileImage(User user, MultipartFile profileImage) {
+    }
+
+    private Role getRoleEnumName(String role) {
+    }
+
+    private String getTemporaryProfileImageUrl(String username) {
+        return ServletUriComponentsBuilder.fromCurrentContextPath().path(DEFAULT_USER_IMAGE_PATH + username).toUriString();
     }
 
     private String encodePassword(String password) {
