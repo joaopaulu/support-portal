@@ -89,8 +89,9 @@ public class UserResource extends ExceptionHandling {
     }
 
     @PostMapping("/update")
-    public ResponseEntity<User> updateUser(
+    public ResponseEntity<User> update(
             @RequestParam("currentUsername") String currentUsername,
+            @RequestParam("firstName") String firstName,
             @RequestParam("lastName") String lastName,
             @RequestParam("username") String username,
             @RequestParam("email") String email,
@@ -100,8 +101,9 @@ public class UserResource extends ExceptionHandling {
             @RequestParam(value = "profileImage", required = false) MultipartFile profileImage
     ) throws UserNotFoundException, EmailExistException, IOException, UsernameExistException {
 
-        User updatedUser = userService.addNewUser(
+        User updatedUser = userService.updateUser(
                 currentUsername,
+                firstName,
                 lastName,
                 username,
                 email,
