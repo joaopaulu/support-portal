@@ -30,11 +30,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    public SecurityConfiguration(JWTAuthorizationFilter jwtAuthorizationFilter,
-                                 JWTAccessDeniedHandler jwtAccessDeniedHandler,
-                                 JWTAuthenticationEntryPoint jwtAuthenticationEntryPoint,
-                                 @Qualifier("userDetailsService")UserDetailsService userDetailsService,
-                                 BCryptPasswordEncoder bCryptPasswordEncoder) {
+    public SecurityConfiguration(
+            JWTAuthorizationFilter jwtAuthorizationFilter,
+            JWTAccessDeniedHandler jwtAccessDeniedHandler,
+            JWTAuthenticationEntryPoint jwtAuthenticationEntryPoint,
+            @Qualifier("userDetailsService")UserDetailsService userDetailsService,
+            BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.jwtAuthorizationFilter = jwtAuthorizationFilter;
         this.jwtAccessDeniedHandler = jwtAccessDeniedHandler;
         this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;

@@ -21,7 +21,7 @@ public class EmailService {
     public void sendNewPasswordEmail(String firstName, String password, String email) throws MessagingException{
         Message message = createEmail(firstName, password, email);
         SMTPTransport smtpTransport = (SMTPTransport) getEmailSession().getTransport(SIMPLE_MAIL_TRANSFER_PROTOCOL);
-        smtpTransport.connect(GMAIL_SMTP_SERVER, USERNAME, PASSWORD);
+        smtpTransport.connect(SMTP_SERVER, USERNAME, PASSWORD);
         smtpTransport.sendMessage(message, message.getAllRecipients());
         smtpTransport.close();
     }
@@ -40,7 +40,7 @@ public class EmailService {
 
     private Session getEmailSession() {
         Properties properties = System.getProperties();
-        properties.put(SMTP_HOST, GMAIL_SMTP_SERVER);
+        properties.put(SMTP_HOST, SMTP_SERVER);
         properties.put(SMTP_AUTH, true);
         properties.put(SMTP_PORT, DEFAULT_PORT);
         properties.put(SMTP_STARTTLS_ENABLE, true);
