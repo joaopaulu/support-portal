@@ -95,7 +95,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         User user = new User();
         user.setUserId(generateUserId());
         String password = generatePassword();
-        String encodedPassword = encodePassword(password);
         user.setFirstName(firstName);
         user.setLastName(lastName);
         user.setUsername(username);
@@ -108,7 +107,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         user.setAuthorities(ROLE_USER.getAuthorities());
         user.setProfileImageUrl(getTemporaryProfileImageUrl(username));
         userRepository.save(user);
-        // LOGGER.info(NEW_USER_PASSWORD + password);
+        LOGGER.info(NEW_USER_PASSWORD + password);
         emailService.sendNewPasswordEmail(firstName, password, email);
         return user;
     }
