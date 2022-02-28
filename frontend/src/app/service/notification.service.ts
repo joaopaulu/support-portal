@@ -8,6 +8,7 @@ export class NotificationService {
   constructor(private notifier: NotifierService) {
   }
 
+  // tslint:disable-next-line:typedef
   public notify(type: NotificationType, message: string) {
     this.notifier.notify(type, message);
   }
