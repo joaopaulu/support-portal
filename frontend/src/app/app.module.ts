@@ -13,6 +13,7 @@ import {NotificationService} from './service/notification.service';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { UserComponent } from './user/user.component';
+import {FormsModule} from '@angular/forms';
 
 
 @NgModule({
@@ -21,7 +22,8 @@ import { UserComponent } from './user/user.component';
     BrowserModule,
     HttpClientModule,
     AppRoutingModule,
-    NotificationModule
+    NotificationModule,
+    FormsModule
   ],
   providers: [NotificationService, AuthenticationGuard, AuthenticationService, UserService,
     {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}],
