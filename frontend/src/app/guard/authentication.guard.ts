@@ -17,11 +17,11 @@ export class AuthenticationGuard implements CanActivate {
   }
 
   private isUserLoggedIn(): boolean {
-    if (this.authenticationService.isLoggedIn()) {
+    if (this.authenticationService.isUserLoggedIn()) {
       return true;
     }
     this.router.navigate(['/login']);
-    this.notificationService.notify(NotificationType.ERROR, `You need to log in to access this paga`.toUpperCase());
+    this.notificationService.notify(NotificationType.ERROR, `You need to log in to access this page`.toUpperCase());
     return false;
   }
 
