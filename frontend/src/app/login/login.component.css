@@ -41,10 +41,7 @@ html {
 .form_container {
   margin-top: 100px;
 }
-.login-title{
-  margin-top: 10px;
-  margin-bottom:-90px;
-}
+
 .login_btn {
   width: 100%;
   background: #1B4F72!important;
@@ -72,6 +69,4 @@ html {
   background-color: #1B4F72!important;
 }
 
-.input-error-message{
-  color:red;
-}
+

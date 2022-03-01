@@ -36,3 +36,21 @@ td {
   cursor: inherit;
   display: block;
 }
+
+.input-error-message{
+  color:red;
+}
+
+.user-link{
+  color: #2C3E50;
+
+}
+
+.user-link:hover{
+  text-decoration: none;
+}
+
+.header-form-title{
+  margin-top: 10px;
+  margin-bottom:-90px;
+}
