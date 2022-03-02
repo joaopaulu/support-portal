@@ -16,13 +16,14 @@ export class UserComponent implements OnInit {
   public titleAction$ = this.titleSubject.asObservable();
   public users: User[];
   public refreshing: boolean;
+  public selectedUser: User;
   private subscription: Subscription[] = [];
 
   constructor(private userService: UserService, private notificationService: NotificationService) {
   }
 
   ngOnInit(): void {
-    this.getUsers(true)
+    this.getUsers(true);
   }
 
   public changeTitle(title: string): void {
@@ -46,6 +47,11 @@ export class UserComponent implements OnInit {
         }
       )
     );
+  }
+
+  public onSelectUser(selectedUser: User): void {
+    this.selectedUser = selectedUser;
+    document.getElementById('openUserInfo').click();
   }
 
   // tslint:disable-next-line:typedef

@@ -37,8 +37,12 @@ td {
   display: block;
 }
 
-.input-error-message{
+.input-error-message, .locked{
   color:red;
+}
+
+.unlocked{
+  color: green;
 }
 
 .user-link{
