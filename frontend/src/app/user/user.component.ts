@@ -1,10 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {BehaviorSubject, Subscription} from 'rxjs';
-import {User} from '../model/user';
-import {UserService} from '../service/user.service';
-import {NotificationService} from '../service/notification.service';
-import {NotificationType} from '../enum/notification-type.enum';
+import {User} from 'app/model/user';
+import {UserService} from 'app/service/user.service';
+import {NotificationService} from 'app/service/notification.service';
+import {NotificationType} from 'app/enum/notification-type.enum';
 import {HttpErrorResponse} from '@angular/common/http';
+import {NgForm} from '@angular/forms';
 
 @Component({
   selector: 'app-user',
@@ -17,7 +18,9 @@ export class UserComponent implements OnInit {
   public users: User[];
   public refreshing: boolean;
   public selectedUser: User;
-  private subscription: Subscription[] = [];
+  public fileName: string;
+  public profileImage: File;
+  private subscriptions: Subscription[] = [];
 
   constructor(private userService: UserService, private notificationService: NotificationService) {
   }
@@ -32,7 +35,7 @@ export class UserComponent implements OnInit {
 
   public getUsers(showNotification: boolean): void {
     this.refreshing = true;
-    this.subscription.push(
+    this.subscriptions.push(
       this.userService.getUsers().subscribe(
         (response: User[]) => {
           this.userService.addUsersToLocalCache(response);
@@ -44,6 +47,7 @@ export class UserComponent implements OnInit {
         },
         (errorResponse: HttpErrorResponse) => {
           this.sendNotification(NotificationType.ERROR, errorResponse.error.message);
+          this.refreshing = false;
         }
       )
     );
@@ -51,7 +55,36 @@ export class UserComponent implements OnInit {
 
   public onSelectUser(selectedUser: User): void {
     this.selectedUser = selectedUser;
-    document.getElementById('openUserInfo').click();
+    this.clickButton('openUserInfo');
+  }
+
+  public onProfileImageChange(fileName: string, profileImage: File): void {
+    this.fileName = fileName;
+    this.profileImage = profileImage;
+  }
+
+  public saveNewUser(): void {
+    this.clickButton('new-user-save');
+  }
+
+  public onAddNewUser(userForm: NgForm): void {
+    const formData = this.userService.createUserFormDate(null, userForm.value, this.profileImage);
+    this.subscriptions.push(
+      this.userService.addUser(formData).subscribe(
+        (response: User) => {
+          this.clickButton('new-user-close');
+          this.getUsers(false);
+          this.fileName = null;
+          this.profileImage = null;
+          userForm.reset();
+          this.sendNotification(NotificationType.SUCCESS, `${response.firstName} ${response.lastName} updated`);
+        },
+        (errorResponse: HttpErrorResponse) => {
+          this.sendNotification(NotificationType.ERROR, errorResponse.error.message);
+          this.profileImage = null;
+        }
+      )
+    );
   }
 
   // tslint:disable-next-line:typedef
@@ -61,5 +94,9 @@ export class UserComponent implements OnInit {
     } else {
       this.notificationService.notify(notificationType, 'An error occured. Please try again.');
     }
+  }
+
+  private clickButton(buttonId: string): void {
+    document.getElementById(buttonId).click();
   }
 }
