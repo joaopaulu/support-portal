@@ -9,6 +9,7 @@ import {NgForm} from '@angular/forms';
 import {Router} from '@angular/router';
 import {AuthenticationService} from 'app/service/authentication.service';
 import {FileUploadStatus} from 'app/model/file-upload.status';
+import {CustomHttpRespone} from '../model/custom-http-response';
 
 @Component({
   selector: 'app-user',
@@ -194,6 +195,20 @@ export class UserComponent implements OnInit {
     if (results.length === 0 || !searchTerm) {
       this.users = this.userService.getUsersToLocalCache();
     }
+  }
+
+  public onDeleteUser(username: string): void{
+    this.subscriptions.push(
+      this.userService.deleteUser(username).subscribe(
+        (response: CustomHttpRespone) => {
+          this.sendNotification(NotificationType.SUCCESS, response.message);
+          this.getUsers(false);
+        },
+        (errorResponse: HttpErrorResponse) => {
+          this.sendNotification(NotificationType.ERROR, errorResponse.error.message);
+        }
+      )
+    );
   }
 
   public onEditUser(editUser: User): void {

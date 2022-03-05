@@ -84,7 +84,7 @@
               <button class="btn btn-outline-info" (click)="onEditUser(appUser)">
                 <em class="fas fa-edit"></em>
               </button>
-              <button class="btn btn-outline-danger">
+              <button class="btn btn-outline-danger" (click)="onDeleteUser(appUser?.username)">
                 <em class="fas fa-trash"></em>
               </button>
             </div>
@@ -277,7 +277,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title text-center">Edit {{editUser?.firstName}}
-              {{editUser?.lastName}} <small [hidden]="isAdminOrManager">
+              {{editUser?.lastName}} <small>
                 (read only)
               </small></h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -289,7 +289,7 @@
               <form #editUserForm="ngForm">
                 <div class="form-group">
                   <label for="firstName">First Name</label>
-                  <input type="text" name="firstName"  required
+                  <input type="text" name="firstName" required
                          [(ngModel)]="editUser.firstName" class="form-control">
                 </div>
                 <div class="form-group">
@@ -350,8 +350,9 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal" id="closeEditUserModalButton">Close</button>
-            <button type="button" (click)="onUpdateUser()" [disabled]="editUserForm.invalid || !isAdminOrManager" class="btn btn-primary">Save changes</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" id="closeEditUserModalButton">Close
+            </button>
+            <button type="button" (click)="onUpdateUser()" class="btn btn-primary">Save changes</button>
           </div>
         </div>
       </div>
