@@ -171,7 +171,8 @@ export class UserComponent implements OnInit {
           break;
         }
       // tslint:disable-next-line:no-unused-expression
-      default: 'Finished all processes';
+      default:
+        'Finished all processes';
     }
   }
 
@@ -197,7 +198,25 @@ export class UserComponent implements OnInit {
     }
   }
 
-  public onDeleteUser(username: string): void{
+  public onResetPassword(emailForm: NgForm): void {
+    this.refreshing = true;
+    const emailAddress = emailForm.value[''];
+    this.subscriptions.push(
+      this.userService.resetPassword(emailAddress).subscribe(
+        (response: CustomHttpRespone) => {
+          this.sendNotification(NotificationType.SUCCESS, response.message);
+          this.refreshing = false;
+        },
+        (error: HttpErrorResponse) => {
+          this.sendNotification(NotificationType.ERROR, error.error.message);
+          this.refreshing = false;
+        },
+        () => emailForm.reset()
+      )
+    );
+  }
+
+  public onDeleteUser(username: string): void {
     this.subscriptions.push(
       this.userService.deleteUser(username).subscribe(
         (response: CustomHttpRespone) => {
