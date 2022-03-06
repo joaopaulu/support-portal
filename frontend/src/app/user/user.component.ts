@@ -178,8 +178,7 @@ export class UserComponent implements OnInit {
           break;
         }
       // tslint:disable-next-line:no-unused-expression
-      default:
-        'Finished all processes';
+      default:`Finished all processes`;
     }
   }
 

@@ -543,5 +543,12 @@
       </div>
     </div>
 
+    <!-- profile image change form -->
+    <form enctype="multipart/form-data" style="display:none;">
+      <input type="file"
+             (change)="onProfileImageChange($event.target.files[0].name, $event.target.files[0]); onUpdateProfileImage()"
+             name="profile-image-input" id="profile-image-input" placeholder="file" accept="image/*"/>
+    </form>
+
   </div>
 </div>
