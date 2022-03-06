@@ -200,7 +200,7 @@ export class UserComponent implements OnInit {
 
   public onResetPassword(emailForm: NgForm): void {
     this.refreshing = true;
-    const emailAddress = emailForm.value[''];
+    const emailAddress = emailForm.value['reset-password-email'];
     this.subscriptions.push(
       this.userService.resetPassword(emailAddress).subscribe(
         (response: CustomHttpRespone) => {
