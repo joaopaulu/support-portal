@@ -35,6 +35,7 @@ export class UserComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.user = this.authenticationService.getUserFromLocalCache();
     this.getUsers(true);
   }
 
@@ -135,6 +136,12 @@ export class UserComponent implements OnInit {
         }
       )
     );
+  }
+
+  public onLogOut(): void {
+    this.authenticationService.logOut();
+    this.router.navigate(['/login']);
+    this.sendNotification(NotificationType.SUCCESS, `You've been successfully logged out`);
   }
 
   public onUpdateProfileImage(): void {
