@@ -1,6 +1,6 @@
 package com.supportportal.service.impl;
 
-import com.supportportal.constant.FileConstant;
+import com.supportportal.exception.domain.NotAnImageFileException;
 import com.supportportal.domain.User;
 import com.supportportal.domain.UserPrincipal;
 import com.supportportal.enumeration.Role;
@@ -34,6 +34,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -42,12 +43,14 @@ import static com.supportportal.constant.UserImplConstant.*;
 import static com.supportportal.enumeration.Role.ROLE_USER;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.springframework.http.MediaType.*;
 
 @Service
 @Transactional
 @Qualifier("userDetailsService")
 public class UserServiceImpl implements UserService, UserDetailsService {
 
+    public static final String UPLOAD_IMAGE_FILE = "is not an image fiel. Please upload an image";
     private Logger LOGGER = LoggerFactory.getLogger(getClass());
     private UserRepository userRepository;
     private BCryptPasswordEncoder passwordEncoder;
@@ -115,7 +118,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public User addNewUser(String firstName, String lastName, String username, String email, String role, boolean isNonLocked, boolean isActive, MultipartFile profileImage) throws UserNotFoundException, EmailExistException, UsernameExistException, IOException {
+    public User addNewUser(String firstName, String lastName, String username, String email, String role, boolean isNonLocked, boolean isActive, MultipartFile profileImage) throws UserNotFoundException, EmailExistException, UsernameExistException, IOException, NotAnImageFileException {
         validateNewUsernameAndEmail(EMPTY, username, email);
         User user = new User();
         String password = generatePassword();
@@ -137,7 +140,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public User updateUser(String currentUsername, String newFirstName, String newLastName, String newUsername, String newEmail, String role, boolean isNonLocked, boolean isActive, MultipartFile profileImage) throws UserNotFoundException, EmailExistException, UsernameExistException, IOException {
+    public User updateUser(String currentUsername, String newFirstName, String newLastName, String newUsername, String newEmail, String role, boolean isNonLocked, boolean isActive, MultipartFile profileImage) throws UserNotFoundException, EmailExistException, UsernameExistException, IOException, NotAnImageFileException {
         User currentUser = validateNewUsernameAndEmail(currentUsername, newUsername, newEmail);
         User user = new User();
         String password = generatePassword();
@@ -175,14 +178,17 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public User updateProfileImage(String username, MultipartFile profileImage) throws UserNotFoundException, EmailExistException, UsernameExistException, IOException {
+    public User updateProfileImage(String username, MultipartFile profileImage) throws UserNotFoundException, EmailExistException, UsernameExistException, IOException, NotAnImageFileException {
         User user = validateNewUsernameAndEmail(username, null, null);
         saveProfileImage(user, profileImage);
         return user;
     }
 
-    private void saveProfileImage(User user, MultipartFile profileImage) throws IOException {
+    private void saveProfileImage(User user, MultipartFile profileImage) throws IOException, NotAnImageFileException {
         if (profileImage != null) {
+            if(!Arrays.asList(IMAGE_JPEG_VALUE, IMAGE_PNG_VALUE, IMAGE_GIF_VALUE).contains(profileImage.getContentType())){
+                throw new NotAnImageFileException(profileImage.getOriginalFilename() + UPLOAD_IMAGE_FILE);
+            }
             Path userFolder = Paths.get(USER_FOLDER + user.getUsername()).toAbsolutePath().normalize();
             if (!Files.exists(userFolder)) {
                 Files.createDirectories(userFolder);
