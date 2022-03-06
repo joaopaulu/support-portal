@@ -38,7 +38,7 @@ import static org.springframework.http.HttpStatus.OK;
 @RequestMapping(value = {"/", "/user"})
 public class UserResource extends ExceptionHandling {
     public static final String EMAIL_SENT = "An email with a new password was sent to: ";
-    public static final String USER_DELETED_SUCESSFULLY = "User deleted sucessfully";
+    public static final String USER_DELETED_SUCCESSFULLY = "User deleted successfully";
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
     private final JWTTokenProvider jwtTokenProvider;
@@ -133,11 +133,11 @@ public class UserResource extends ExceptionHandling {
         return response(OK, EMAIL_SENT + email);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/delete/{username}")
     @PreAuthorize("hasAnyAuthority('user:delete')")
-    public ResponseEntity<HttpResponse> deleteUser(@PathVariable("id") Long id) {
-        userService.deleteUser(id);
-        return response(OK, USER_DELETED_SUCESSFULLY);
+    public ResponseEntity<HttpResponse> deleteUser(@PathVariable("username") String username) throws IOException {
+        userService.deleteUser(username);
+        return response(OK, USER_DELETED_SUCCESSFULLY);
     }
 
     @PostMapping("/updateProfileImage")
