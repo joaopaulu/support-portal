@@ -10,6 +10,7 @@ import {Router} from '@angular/router';
 import {AuthenticationService} from 'app/service/authentication.service';
 import {FileUploadStatus} from 'app/model/file-upload.status';
 import {CustomHttpRespone} from '../model/custom-http-response';
+import {Role} from "../enum/role.enum";
 
 @Component({
   selector: 'app-user',
@@ -178,7 +179,8 @@ export class UserComponent implements OnInit {
           break;
         }
       // tslint:disable-next-line:no-unused-expression
-      default:`Finished all processes`;
+      default:
+        `Finished all processes`;
     }
   }
 
@@ -240,6 +242,22 @@ export class UserComponent implements OnInit {
     this.editUser = editUser;
     this.currentUsername = editUser.username;
     this.clickButton('openUserEdit');
+  }
+
+  public get isAdmin(): boolean {
+    return this.getUserRole() === Role.ADMIN || this.getUserRole() === Role.SUPER_ADMIN;
+  }
+
+  public get isManager(): boolean {
+    return this.isAdmin || this.getUserRole() === Role.MANAGER;
+  }
+
+  public get isAdminOrManager(): boolean {
+    return this.isAdmin || this.isManager;
+  }
+
+  private getUserRole(): string {
+    return this.authenticationService.getUserFromLocalCache().role;
   }
 
   // tslint:disable-next-line:typedef
