@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {BehaviorSubject, Subscription} from 'rxjs';
 import {User} from 'app/model/user';
 import {UserService} from 'app/service/user.service';
@@ -10,14 +10,16 @@ import {Router} from '@angular/router';
 import {AuthenticationService} from 'app/service/authentication.service';
 import {FileUploadStatus} from 'app/model/file-upload.status';
 import {CustomHttpRespone} from '../model/custom-http-response';
-import {Role} from "../enum/role.enum";
+import {Role} from 'app/enum/role.enum';
+import {SubSink} from 'subsink';
 
 @Component({
   selector: 'app-user',
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.css']
 })
-export class UserComponent implements OnInit {
+export class UserComponent implements OnInit, OnDestroy {
+  private subs = new SubSink();
   private titleSubject = new BehaviorSubject<string>('Users');
   public titleAction$ = this.titleSubject.asObservable();
   public users: User[];
@@ -46,7 +48,7 @@ export class UserComponent implements OnInit {
 
   public getUsers(showNotification: boolean): void {
     this.refreshing = true;
-    this.subscriptions.push(
+    this.subs.add(
       this.userService.getUsers().subscribe(
         (response: User[]) => {
           this.userService.addUsersToLocalCache(response);
@@ -80,7 +82,7 @@ export class UserComponent implements OnInit {
 
   public onAddNewUser(userForm: NgForm): void {
     const formData = this.userService.createUserFormDate(null, userForm.value, this.profileImage);
-    this.subscriptions.push(
+    this.subs.add(
       this.userService.addUser(formData).subscribe(
         (response: User) => {
           this.clickButton('new-user-close');
@@ -271,5 +273,9 @@ export class UserComponent implements OnInit {
 
   private clickButton(buttonId: string): void {
     document.getElementById(buttonId).click();
+  }
+
+  ngOnDestroy(): void {
+    this.subs.unsubscribe();
   }
 }
